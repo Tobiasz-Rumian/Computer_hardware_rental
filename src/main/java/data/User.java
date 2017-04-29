@@ -2,6 +2,7 @@ package data;
 
 import enums.Role;
 import lombok.Data;
+import lombok.experimental.Builder;
 
 import java.io.Serializable;
 
@@ -13,4 +14,13 @@ public class User implements Serializable {
     private String nick;
     private Role role;
     private String password;
+
+    public User(String nick, Role role, String password) {
+        this.nick = nick;
+        this.role = role;
+        this.password = password;
+    }
+    public String toString(){
+        return nick;
+    }
 }
