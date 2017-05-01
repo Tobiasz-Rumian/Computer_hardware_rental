@@ -4,6 +4,7 @@ import rental.Rental;
 import rental.Run;
 import settings.Settings;
 import view.panels.PanelWelcome;
+import view.panels.TabPanel;
 
 import javax.swing.*;
 import java.awt.event.ComponentEvent;
@@ -17,17 +18,16 @@ import java.awt.event.WindowListener;
 public class View extends JFrame implements WindowListener {
     private Run run;
     private Rental rental;
-    private PanelWelcome panelWelcome=new PanelWelcome();
+    private TabPanel tabPanel = new TabPanel();
 
     public View(Run run){
         super("Wypożyczalnia");
         setSize(800, 800);
-        setContentPane(panelWelcome);
+        setContentPane(tabPanel);
         this.addWindowListener(this);
         this.addComponentListener(new ComponentListener() {
             public void componentResized(ComponentEvent e) {
                 Settings.windowSize=e.getComponent().getSize();
-                panelWelcome.refresh();
             }
 
             public void componentMoved(ComponentEvent e) {
@@ -81,5 +81,4 @@ public class View extends JFrame implements WindowListener {
     public void windowDeactivated(WindowEvent e) {
 
     }
-
 }

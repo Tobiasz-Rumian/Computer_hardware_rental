@@ -4,8 +4,8 @@
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Tobiasz_Rumian_PGS_2017" target="1.5" />
+    <bytecodeTargetLevel target="1.8">
+      <module name="Tobiasz_Rumian_PGS_2017" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -4,6 +4,7 @@ import data.Transaction;
 import data.Product;
 import data.User;
 import enums.Role;
+import session.CurrentSession;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -13,33 +14,60 @@ import java.util.stream.Stream;
 /**
  * Created by Tobiasz Rumian on 25.04.2017.
  */
-public class Rental implements Serializable{
-    private Map<String,User> users=new HashMap<>();
-    private Map<String,Product> products=new HashMap<>();
-    private List<Transaction> history=new ArrayList<>();
+public class Rental implements Serializable {
+    private Map<String, User> users = new HashMap<>();
+    private Map<String, Product> products = new HashMap<>();
+    private List<Transaction> history = new ArrayList<>();
+    private CurrentSession session = null;
 
-    public void addUser(String nick, Role role, String password) throws IllegalArgumentException{
-        if(users.containsKey(nick)) throw new IllegalArgumentException("Użytkownik o podanym nick'u już istnieje!");
-        users.put(nick,new User(nick,role,password));
+    public void addUser(String nick, Role role, String password) throws IllegalArgumentException {
+        if (session == null || session.getLoggedUserRole() != Role.ADMIN)
+            throw new IllegalArgumentException("Nie masz wystarczających praw by wykonać tę akcję!");
+        if (users.containsKey(nick))
+            throw new IllegalArgumentException("Użytkownik o podanym nick'u już istnieje!");
+        users.put(nick, new User(nick, role, password));
     }
 
-    public void addProduct(String name, BigDecimal price) throws IllegalArgumentException{
-        if(products.containsKey(name)) throw new IllegalArgumentException("Produkt o podanej nazwie już istnieje!");
-        products.put(name,new Product(name,price));
+    public Map<String, User> showUsers() {
+        return users;
     }
 
-    private void addTransaction(Transaction transaction){
+    public void addProduct(String name, BigDecimal price) throws IllegalArgumentException {
+        if (session == null || session.getLoggedUserRole() != Role.ADMIN)
+            throw new IllegalArgumentException("Nie masz wystarczających praw by wykonać tę akcję!");
+        if (products.containsKey(name))
+            throw new IllegalArgumentException("Produkt o podanej nazwie już istnieje!");
+        products.put(name, new Product(name, price));
+    }
+
+    public Map<String,Product> showProducts(){
+        return products;
+    }
+
+    public void rent(User user, Product product, int forHowMannyDays) {
+        Transaction newTransaction = new Transaction(product, user, forHowMannyDays);
+        product.setAvailable(false);
+        addTransaction(newTransaction);
+    }
+
+
+    private void addTransaction(Transaction transaction) {
         history.add(transaction);
     }
 
-    public void deleteUser(String nick){
+    public void deleteUser(String nick) {
         users.remove(nick);
     }
-    public void deleteProduct(String name){
+
+    public void deleteProduct(String name) {
         products.remove(name);
     }
-    public List<Transaction> getHistory(){
+
+    public List<Transaction> getHistory() {
         return history;
     }
 
+    public void createSession(User user) {
+        session = new CurrentSession(user);
+    }
 }

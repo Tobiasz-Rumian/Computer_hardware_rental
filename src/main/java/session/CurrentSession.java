@@ -1,6 +1,7 @@
 package session;
 
 import data.User;
+import enums.Role;
 
 /**
  * Created by zekori on 29.04.17.
@@ -13,5 +14,12 @@ public class CurrentSession {
     }
 
     private CurrentSession() {
+    }
+    public CurrentSession(User user){
+        loggedUser=user;
+    }
+
+    public Role getLoggedUserRole() {
+        return loggedUser.getRole();
     }
 }
