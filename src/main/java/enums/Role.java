@@ -1,7 +1,8 @@
 package enums;
 
 /**
- * Created by Tobiasz Rumian on 25.04.2017.
+ * Dostępne role użytkownika.
+ * @author Tobiasz Rumian
  */
 public enum Role {
     ADMIN,USER,SELLER

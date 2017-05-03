@@ -1,13 +1,13 @@
 package data;
 
 import lombok.Data;
-import lombok.experimental.Builder;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * Created by Tobiasz Rumian on 25.04.2017.
+ * Klasa bazodanowa przechowująca dane produktu.
+ * @author Tobiasz Rumian
  */
 @Data
 public class Product implements Serializable{

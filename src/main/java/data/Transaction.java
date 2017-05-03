@@ -8,7 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
- * Created by Tobiasz Rumian on 25.04.2017.
+ * Klasa bazodanowa przechowująca dane o tranzakcji.
+ * @author Tobiasz Rumian
  */
 @Data
 public class Transaction implements Serializable {
@@ -25,6 +26,10 @@ public class Transaction implements Serializable {
         this.forHowMannyDays = forHowMannyDays;
     }
 
+    /**
+     * Zwraca przewidywaną datę zwrotu produktu.
+     * @return Przewidywana data zwrotu produktu.
+     */
     public Calendar getDateOfReturn() {
         Calendar x = dateOfRental;
         x.add(Calendar.DATE, forHowMannyDays);
@@ -35,10 +40,17 @@ public class Transaction implements Serializable {
         return product.toString() + "\t" + user.toString() + "\t" + dateOfRentalToString() + "\t" + dateOfReturnToString();
     }
 
+    /**
+     * Zwraca datę wypożyczenia jako sformatowany tekst.
+     * @return Data wypożyczenia jako tekst.
+     */
     public String dateOfRentalToString() {
         return df.format(dateOfRental.getTime());
     }
-
+    /**
+     * Zwraca datę przewidywanego zwrotu jako sformatowany tekst.
+     * @return Data przewidywanego zwrotu jako tekst.
+     */
     public String dateOfReturnToString() {
         return df.format(getDateOfReturn().getTime());
     }

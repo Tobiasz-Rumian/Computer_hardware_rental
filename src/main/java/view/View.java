@@ -19,6 +19,11 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Klasa zarządająca widokiem aplikacji.
+ *
+ * @author Tobiasz Rumian
+ */
 public class View extends JFrame {
 
     private final JTabbedPane pane = new JTabbedPane();
@@ -31,6 +36,7 @@ public class View extends JFrame {
     private JButton showTransactions = new JButton("Wyświetl historię tranzakcji");
     private int activeTabsCounter = 0;
 
+    //Przypisywanie przyciskom odpowiednich ról
     {
         menuButtons.put(addProduct, Role.ADMIN);
         menuButtons.put(showAvailableProducts, Role.USER);
@@ -74,7 +80,10 @@ public class View extends JFrame {
             }
         });
 
-        loggin(rental);
+        logIn(rental);//Logowanie do aplikacji.
+        /*
+         * Przycisk wyświetlający okno dodawania produktu.
+         */
         addProduct.addActionListener(e -> {
             //Create and populate the panel.
             JPanel panel = new JPanel(new SpringLayout());
@@ -83,6 +92,7 @@ public class View extends JFrame {
             JTextField nameTextField = new JTextField(10);
             JTextField priceTextField = new JTextField(10);
             JButton buttonAddUser = new JButton("Dodaj");
+            //Pozwala zatwierdzić klawiszem ENTER.
             nameTextField.addKeyListener(new KeyListener() {
                 public void keyTyped(KeyEvent e) {
                 }
@@ -142,7 +152,9 @@ public class View extends JFrame {
                 }
             });
         });
-
+        /*
+         * Przycisk wyświetlający okno z dostępnymi produktami.
+         */
         showAvailableProducts.addActionListener(e -> {
             long counter = rental.getProducts().values().stream().filter(Product::isAvailable).count();
             //Create and populate the panel.
@@ -169,13 +181,17 @@ public class View extends JFrame {
             //Create and set up the window.
             panel.setOpaque(true);  //content panes must be opaque
             JComponent component = new JPanel(false);
-            component.add(panel);
+            JScrollPane scrollPane = new JScrollPane(panel);
+            scrollPane.setPreferredSize(new Dimension(350,300));
+            component.add(scrollPane);
             pane.add("Produkty dostępne do wypożyczenia", component);
             initTabComponent(activeTabsCounter);
             pane.setSelectedIndex(activeTabsCounter);
             activeTabsCounter++;
         });
-
+        /*
+         * Przycisk wyświetlający okno umożliwiające dodanie użytkownika.
+         */
         addClient.addActionListener(e -> {
             //Create and populate the panel.
             JPanel panel = new JPanel(new SpringLayout());
@@ -265,6 +281,10 @@ public class View extends JFrame {
                 }
             });
         });
+        
+        /*
+         * Przycisk wyświetlający okno wyświetlające klientów.
+         */
         showClients.addActionListener(e -> {
             //Create and populate the panel.
             JPanel panel = new JPanel(new SpringLayout());
@@ -288,12 +308,18 @@ public class View extends JFrame {
             //Create and set up the window.
             panel.setOpaque(true);  //content panes must be opaque
             JComponent component = new JPanel(false);
-            component.add(panel);
+            JScrollPane scrollPane = new JScrollPane(panel);
+            scrollPane.setPreferredSize(new Dimension(350,300));
+            component.add(scrollPane);
             pane.add("Użytkownicy", component);
             initTabComponent(activeTabsCounter);
             pane.setSelectedIndex(activeTabsCounter);
             activeTabsCounter++;
         });
+        
+        /*
+         * Przycisk wyświetlający okno umożliwiające wypożyczenie produktu.
+         */
         rentProduct.addActionListener(e -> {
             if (rental.getProducts().size() == 0) {
                 JOptionPane.showMessageDialog(this, "Brak produktów do wypożyczenia", "Błąd!", JOptionPane.ERROR_MESSAGE);
@@ -388,6 +414,10 @@ public class View extends JFrame {
                 }
             });
         });
+        
+        /*
+         * Przycisk wyświetlający okno wyświetlające historię tranzakcji.
+         */
         showTransactions.addActionListener(e -> {
             //Create and populate the panel.
             JPanel panel = new JPanel(new SpringLayout());
@@ -418,7 +448,9 @@ public class View extends JFrame {
             //Create and set up the window.
             panel.setOpaque(true);  //content panes must be opaque
             JComponent component = new JPanel(false);
-            component.add(panel);
+            JScrollPane scrollPane = new JScrollPane(panel);
+            scrollPane.setPreferredSize(new Dimension(350,300));
+            component.add(scrollPane);
             pane.add("Historia tranzakcji", component);
             initTabComponent(activeTabsCounter);
             pane.setSelectedIndex(activeTabsCounter);
@@ -426,17 +458,27 @@ public class View extends JFrame {
         });
     }
 
+    /**
+     * Zmniejsza licznik aktywnych okien o 1.
+     */
     public void decActiveTabsCounter() {
         activeTabsCounter--;
     }
 
-
+    /**
+     * Aktywuje nowe okno o indeksie i.
+     * @param i Indeks nowego okna.
+     */
     private void initTabComponent(int i) {
         pane.setTabComponentAt(i,
                 new ButtonTabComponent(pane, this));
     }
 
-    private void loggin(Rental rental) {
+    /**
+     * Wyświetla okno logowania.
+     * @param rental Obiekt wypożyczalni.
+     */
+    private void logIn(Rental rental) {
         JButton button = new JButton("Zaloguj");
         JPanel p = new JPanel(new SpringLayout());
         JLabel loginJLabel = new JLabel("Login", JLabel.TRAILING);

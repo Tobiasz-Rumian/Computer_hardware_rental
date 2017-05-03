@@ -11,7 +11,11 @@ import java.math.BigDecimal;
 import java.util.*;
 
 /**
- * Created by Tobiasz Rumian on 25.04.2017.
+ * Klasa przechowująca dane wypożyczalni.
+ * Na potrzeby testów przy pierwszym uruchomieniu tworzone jest konto administratora danych logowania:
+ * Login: admin
+ * Hasło: admin
+ * @author Tobiasz Rumian
  */
 public class Rental implements Serializable {
     private Map<String, User> users = new HashMap<>();
@@ -23,6 +27,13 @@ public class Rental implements Serializable {
     private Map<String, Product> products = new HashMap<>();
     private List<Transaction> history = new ArrayList<>();
 
+    /**
+     * Dodaje użytkownika do mapy.
+     * @param nick Login użytkownika.
+     * @param role Rola użytkownika.
+     * @param password Hasło użytkownika.
+     * @throws IllegalArgumentException Błędne dane wejściowe.
+     */
     public void addUser(String nick, Role role, String password) throws IllegalArgumentException {
         if (CurrentSession.getInstance().getLoggedUserRole() != Role.ADMIN)
             throw new IllegalArgumentException("Nie masz wystarczających praw by wykonać tę akcję!");
@@ -33,10 +44,12 @@ public class Rental implements Serializable {
         users.put(nick, new User(nick, role, password));
     }
 
-    public Map<String, User> showUsers() {
-        return users;
-    }
-
+    /**
+     * Dodaje produkt do mapy.
+     * @param name Nazwa produktu.
+     * @param price Cena produktu.
+     * @throws IllegalArgumentException Błędne dane wejściowe.
+     */
     public void addProduct(String name, BigDecimal price) throws IllegalArgumentException {
         if (CurrentSession.getInstance().getLoggedUserRole() != Role.ADMIN)
             throw new IllegalArgumentException("Nie masz wystarczających praw by wykonać tę akcję!");
@@ -45,45 +58,65 @@ public class Rental implements Serializable {
         products.put(name, new Product(name, price));
     }
 
-    public Map<String, Product> showProducts() {
-        return products;
-    }
-
+    /**
+     * Wypożycza produkt.
+     * @param user Użytkownik wypożyczający produkt.
+     * @param product Wypożyczany produkt.
+     * @param forHowMannyDays Na ile dni produkt jest wypożyczany.
+     */
     public void rent(User user, Product product, int forHowMannyDays) {
         Transaction newTransaction = new Transaction(product, user, forHowMannyDays);
         product.setAvailable(false);
         addTransaction(newTransaction);
     }
 
+    /**
+     * Zwraca użytkownika o podanym loginie.
+     * @param nick Login użytkownika.
+     * @return Obiekt użytkownika.
+     */
     public User getUser(String nick) {
         return users.get(nick);
     }
 
-
+    /**
+     * Dodaje tranzakcje do historii.
+     * @param transaction Dodawana tranzakcja.
+     */
     private void addTransaction(Transaction transaction) {
         history.add(transaction);
     }
 
-    public void deleteUser(String nick) {
-        users.remove(nick);
-    }
-
-    public void deleteProduct(String name) {
-        products.remove(name);
-    }
-
+    /**
+     * Zwraca historię tranzakcji.
+     * @return Lista tranzakcji.
+     */
     public List<Transaction> getHistory() {
         return history;
     }
 
+    /**
+     * Sprawdza, czy użytkownik o podanym loginie i haśle istnieje
+     * @param login Login użytkownika.
+     * @param password Hasło użytkownika.
+     * @return Zwraca true jeżeli dane użytkownika się zgadzają.
+     */
     public boolean checkCredentials(String login, String password) {
         return users.containsKey(login) && users.get(login).getPassword().equals(password);
     }
 
+    /**
+     * Zwraca mapę produków.
+     * @return Mapa produktów.
+     */
     public Map<String, Product> getProducts() {
         return products;
     }
 
+    /**
+     * Zwraca mapę użytkowników.
+     * @return Mapa użytkowników.
+     */
     public Map<String, User> getUsers() {
         return users;
     }

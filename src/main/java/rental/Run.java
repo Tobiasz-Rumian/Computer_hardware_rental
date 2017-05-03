@@ -9,7 +9,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * Created by Tobiasz Rumian on 25.04.2017.
+ * Klasa uruchomienia aplikacji.
+ * @author Tobiasz Rumian
  */
 public class Run {
     private Rental rental;
@@ -23,17 +24,20 @@ public class Run {
         new View("Wypożyczalnia sprzętu komputerowego", rental, this);
     }
 
-    public Rental getRental() {
-        return rental;
-    }
-
+    /**
+     * Zapisuje obiekt wypożyczalni do pliku.
+     * @throws Exception Zwraca wyjątek gdy plik jest w użyciu.
+     */
     public void saveRentalToFile() throws Exception {
         CurrentSession.getInstance().clearCurrentSession();
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("Rental.rental"));
         out.writeObject(rental);
         out.close();
     }
-
+    /**
+     * Wczytuje obiekt wypożyczalni z pliku.
+     * @throws Exception Zwraca wyjątek gdy plik nie istnieje.
+     */
     private void loadRentalFromFile() throws Exception {
         CurrentSession.getInstance().clearCurrentSession();
         ObjectInputStream in = new ObjectInputStream(new FileInputStream("Rental.rental"));

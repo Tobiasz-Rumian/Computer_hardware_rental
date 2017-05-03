@@ -6,7 +6,8 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * Created by Tobiasz Rumian on 25.04.2017.
+ * Klasa bazodanowa przechowująca dane użytkownika.
+ * @author Tobiasz Rumian
  */
 @Data
 public class User implements Serializable {
