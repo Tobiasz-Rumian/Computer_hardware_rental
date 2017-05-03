@@ -1,11 +1,11 @@
 package data;
 
 import lombok.Data;
-import lombok.experimental.Builder;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by Tobiasz Rumian on 25.04.2017.
@@ -16,6 +16,7 @@ public class Transaction implements Serializable {
     private User user;
     private Calendar dateOfRental;
     private int forHowMannyDays;
+    private DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public Transaction(Product product, User user, int forHowMannyDays) {
         this.product = product;
@@ -30,6 +31,12 @@ public class Transaction implements Serializable {
         return x;
     }
     public String toString(){
-        return product.toString()+"\t"+user.toString()+"\t"+dateOfRental.toString()+"\t"+getDateOfReturn().toString();
+        return product.toString()+"\t"+user.toString()+"\t"+dateOfRentalToString()+"\t"+dateOfReturnToString();
+    }
+    public String dateOfRentalToString(){
+        return df.format(dateOfRental.getTime());
+    }
+    public String dateOfReturnToString(){
+        return df.format(getDateOfReturn().getTime());
     }
 }

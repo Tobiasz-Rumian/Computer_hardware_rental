@@ -1,5 +1,6 @@
 package rental;
 
+import session.CurrentSession;
 import view.View;
 
 import java.io.FileInputStream;
@@ -12,7 +13,6 @@ import java.io.ObjectOutputStream;
  */
 public class Run {
     private Rental rental;
-    private View view;
 
     private Run(){
         try{
@@ -20,8 +20,7 @@ public class Run {
         }catch (Exception e){
             rental=new Rental();
         }
-        view=new View(this);
-
+        new View("Wypożyczalnia sprzętu komputerowego",rental,this);
     }
 
     public Rental getRental() {
@@ -29,6 +28,7 @@ public class Run {
     }
 
     public void saveRentalToFile() throws Exception {
+        CurrentSession.getInstance().clearCurrentSession();
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("Rental.rental"));
         out.writeObject(rental);
         out.close();

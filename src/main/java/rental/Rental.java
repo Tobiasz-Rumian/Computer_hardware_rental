@@ -1,7 +1,7 @@
 package rental;
 
-import data.Transaction;
 import data.Product;
+import data.Transaction;
 import data.User;
 import enums.Role;
 import session.CurrentSession;
@@ -9,22 +9,26 @@ import session.CurrentSession;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Stream;
 
 /**
  * Created by Tobiasz Rumian on 25.04.2017.
  */
 public class Rental implements Serializable {
     private Map<String, User> users = new HashMap<>();
+    {
+        users.put("admin",new User("admin",Role.ADMIN,"admin"));
+    }
     private Map<String, Product> products = new HashMap<>();
     private List<Transaction> history = new ArrayList<>();
-    private CurrentSession session = null;
+    private CurrentSession session = CurrentSession.getInstance();
 
     public void addUser(String nick, Role role, String password) throws IllegalArgumentException {
         if (session == null || session.getLoggedUserRole() != Role.ADMIN)
             throw new IllegalArgumentException("Nie masz wystarczających praw by wykonać tę akcję!");
         if (users.containsKey(nick))
             throw new IllegalArgumentException("Użytkownik o podanym nick'u już istnieje!");
+        if((nick==null||nick.equals(""))||(password==null||password.equals("")))
+            throw new IllegalArgumentException("Błędne dane!");
         users.put(nick, new User(nick, role, password));
     }
 
@@ -50,6 +54,10 @@ public class Rental implements Serializable {
         addTransaction(newTransaction);
     }
 
+    public User getUser(String nick){
+        return users.get(nick);
+    }
+
 
     private void addTransaction(Transaction transaction) {
         history.add(transaction);
@@ -67,7 +75,15 @@ public class Rental implements Serializable {
         return history;
     }
 
-    public void createSession(User user) {
-        session = new CurrentSession(user);
+    public boolean checkCredentials(String login, String password){
+        return users.containsKey(login) && users.get(login).getPassword().equals(password);
+    }
+
+    public Map<String, Product> getProducts() {
+        return products;
+    }
+
+    public Map<String, User> getUsers() {
+        return users;
     }
 }
