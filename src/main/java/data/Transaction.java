@@ -25,18 +25,21 @@ public class Transaction implements Serializable {
         this.forHowMannyDays = forHowMannyDays;
     }
 
-    public Calendar getDateOfReturn(){
+    public Calendar getDateOfReturn() {
         Calendar x = dateOfRental;
         x.add(Calendar.DATE, forHowMannyDays);
         return x;
     }
-    public String toString(){
-        return product.toString()+"\t"+user.toString()+"\t"+dateOfRentalToString()+"\t"+dateOfReturnToString();
+
+    public String toString() {
+        return product.toString() + "\t" + user.toString() + "\t" + dateOfRentalToString() + "\t" + dateOfReturnToString();
     }
-    public String dateOfRentalToString(){
+
+    public String dateOfRentalToString() {
         return df.format(dateOfRental.getTime());
     }
-    public String dateOfReturnToString(){
+
+    public String dateOfReturnToString() {
         return df.format(getDateOfReturn().getTime());
     }
 }

@@ -16,15 +16,12 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class View extends JFrame{
+public class View extends JFrame {
 
     private final JTabbedPane pane = new JTabbedPane();
-    private List<JTextField> textFields = new ArrayList<>();
     private Map<JButton, Role> menuButtons = new HashMap<>();
     private JButton addProduct = new JButton("Dodaj produkt");
     private JButton showAvailableProducts = new JButton("Wyświetl produkty dostępne do wypożyczenia");
@@ -49,7 +46,9 @@ public class View extends JFrame{
         add(pane);
 
         this.addWindowListener(new WindowListener() {
-            public void windowOpened(WindowEvent e) {}
+            public void windowOpened(WindowEvent e) {
+            }
+
             @Override
             public void windowClosing(WindowEvent e) {
                 try {
@@ -58,84 +57,24 @@ public class View extends JFrame{
                     e1.printStackTrace();
                 }
             }
-            public void windowClosed(WindowEvent e) {}
-            public void windowIconified(WindowEvent e) {}
-            public void windowDeiconified(WindowEvent e) {}
-            public void windowActivated(WindowEvent e) {}
-            public void windowDeactivated(WindowEvent e) {}
-        });
 
-        JButton button = new JButton("Zaloguj");
-        String[] labels = {"Login: ", "Hasło: "};
-        int numPairs = labels.length;
-        //Create and populate the panel.
-        JPanel p = new JPanel(new SpringLayout());
-        for (String label : labels) {
-            JLabel l = new JLabel(label, JLabel.TRAILING);
-            p.add(l);
-            JTextField textField = new JTextField(10);
-            textFields.add(textField);
-            textField.addKeyListener(new KeyListener() {
-                public void keyTyped(KeyEvent e) {}
-                public void keyPressed(KeyEvent e) {}
-                @Override
-                public void keyReleased(KeyEvent e) {
-                    if(e.getKeyCode()==KeyEvent.VK_ENTER){
-                        button.doClick();
-                    }
-                }
-            });
-            l.setLabelFor(textField);
-            p.add(textField);
-        }
-        //Lay out the panel.
-        SpringUtilities.makeCompactGrid(p,
-                numPairs, 2, //rows, cols
-                6, 6,        //initX, initY
-                6, 6);       //xPad, yPad
+            public void windowClosed(WindowEvent e) {
+            }
 
-        //Create and set up the window.
-        p.setOpaque(true);  //content panes must be opaque
-        JComponent panelLogging = new JPanel(false);
-        panelLogging.add(p);
-        panelLogging.add(button);
-        pane.add("Logowanie", panelLogging);
-        initTabComponent(activeTabsCounter);
-        activeTabsCounter++;
-        pane.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
-        setSize(new Dimension(400, 400));
-        setLocationRelativeTo(null);
-        setVisible(true);
+            public void windowIconified(WindowEvent e) {
+            }
 
-        button.addActionListener(e -> {
-            if (rental.checkCredentials(textFields.get(0).getText(), textFields.get(1).getText())) {
-                CurrentSession.getInstance().setLoggedUser(rental.getUser(textFields.get(0).getText()));
-                pane.remove(activeTabsCounter - 1);
-                activeTabsCounter--;
-                JPanel panel = new JPanel();
-                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-                menuButtons.forEach((B, R) -> {
-                    switch (CurrentSession.getInstance().getLoggedUserRole()) {
-                        case USER:
-                            if (R == Role.USER) panel.add(B);
-                            break;
-                        case SELLER:
-                            if (R == Role.USER) panel.add(B);
-                            if (R == Role.SELLER) panel.add(B);
-                            break;
-                        case ADMIN:
-                            if (R == Role.USER) panel.add(B);
-                            if (R == Role.SELLER) panel.add(B);
-                            if (R == Role.ADMIN) panel.add(B);
-                    }
-                });
-                pane.add("Główne menu", panel);
-                initTabComponent(activeTabsCounter);
-                activeTabsCounter++;
-            } else {
-                textFields.forEach(T -> T.setText(""));
+            public void windowDeiconified(WindowEvent e) {
+            }
+
+            public void windowActivated(WindowEvent e) {
+            }
+
+            public void windowDeactivated(WindowEvent e) {
             }
         });
+
+        loggin(rental);
         addProduct.addActionListener(e -> {
             //Create and populate the panel.
             JPanel panel = new JPanel(new SpringLayout());
@@ -145,21 +84,29 @@ public class View extends JFrame{
             JTextField priceTextField = new JTextField(10);
             JButton buttonAddUser = new JButton("Dodaj");
             nameTextField.addKeyListener(new KeyListener() {
-                public void keyTyped(KeyEvent e) {}
-                public void keyPressed(KeyEvent e) {}
+                public void keyTyped(KeyEvent e) {
+                }
+
+                public void keyPressed(KeyEvent e) {
+                }
+
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    if(e.getKeyCode()==KeyEvent.VK_ENTER){
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                         buttonAddUser.doClick();
                     }
                 }
             });
             priceTextField.addKeyListener(new KeyListener() {
-                public void keyTyped(KeyEvent e) {}
-                public void keyPressed(KeyEvent e) {}
+                public void keyTyped(KeyEvent e) {
+                }
+
+                public void keyPressed(KeyEvent e) {
+                }
+
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    if(e.getKeyCode()==KeyEvent.VK_ENTER){
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                         buttonAddUser.doClick();
                     }
                 }
@@ -191,7 +138,7 @@ public class View extends JFrame{
                     pane.remove(activeTabsCounter - 1);
                     activeTabsCounter--;
                 } catch (IllegalArgumentException i) {
-                    //TODO: Wyświetlić komunikat o błędzie.
+                    JOptionPane.showMessageDialog(this, i.getMessage(), "Błąd!", JOptionPane.ERROR_MESSAGE);
                 }
             });
         });
@@ -267,31 +214,43 @@ public class View extends JFrame{
             pane.setSelectedIndex(activeTabsCounter);
             activeTabsCounter++;
             loginTextField.addKeyListener(new KeyListener() {
-                public void keyTyped(KeyEvent e) {}
-                public void keyPressed(KeyEvent e) {}
+                public void keyTyped(KeyEvent e) {
+                }
+
+                public void keyPressed(KeyEvent e) {
+                }
+
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    if(e.getKeyCode()==KeyEvent.VK_ENTER){
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                         buttonAddUser.doClick();
                     }
                 }
             });
             passwordField.addKeyListener(new KeyListener() {
-                public void keyTyped(KeyEvent e) {}
-                public void keyPressed(KeyEvent e) {}
+                public void keyTyped(KeyEvent e) {
+                }
+
+                public void keyPressed(KeyEvent e) {
+                }
+
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    if(e.getKeyCode()==KeyEvent.VK_ENTER){
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                         buttonAddUser.doClick();
                     }
                 }
             });
             roleJComboBox.addKeyListener(new KeyListener() {
-                public void keyTyped(KeyEvent e) {}
-                public void keyPressed(KeyEvent e) {}
+                public void keyTyped(KeyEvent e) {
+                }
+
+                public void keyPressed(KeyEvent e) {
+                }
+
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    if(e.getKeyCode()==KeyEvent.VK_ENTER){
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                         buttonAddUser.doClick();
                     }
                 }
@@ -302,8 +261,7 @@ public class View extends JFrame{
                     pane.remove(activeTabsCounter - 1);
                     activeTabsCounter--;
                 } catch (IllegalArgumentException i) {
-                    System.err.println(i.toString());
-                    //TODO: Wyświetlić komunikat o błędzie.
+                    JOptionPane.showMessageDialog(this, i.getMessage(), "Błąd!", JOptionPane.ERROR_MESSAGE);
                 }
             });
         });
@@ -337,14 +295,18 @@ public class View extends JFrame{
             activeTabsCounter++;
         });
         rentProduct.addActionListener(e -> {
+            if (rental.getProducts().size() == 0) {
+                JOptionPane.showMessageDialog(this, "Brak produktów do wypożyczenia", "Błąd!", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             JPanel panel = new JPanel(new SpringLayout());
             JLabel userJLabel = new JLabel("Użytkownik", JLabel.TRAILING);
             JLabel productJLabel = new JLabel("Produkt", JLabel.TRAILING);
             JLabel daysJLabel = new JLabel("Na ile dni", JLabel.TRAILING);
             JComboBox<User> userJComboBox = new JComboBox<>();
-            rental.getUsers().forEach((S,U)-> userJComboBox.addItem(U));
+            rental.getUsers().forEach((S, U) -> userJComboBox.addItem(U));
             JComboBox<Product> productJComboBox = new JComboBox<>();
-            rental.getProducts().forEach((S,P)-> productJComboBox.addItem(P));
+            rental.getProducts().forEach((S, P) -> productJComboBox.addItem(P));
             JTextField daysTextField = new JTextField();
             JButton rent = new JButton("Wypożycz");
 
@@ -374,31 +336,43 @@ public class View extends JFrame{
             activeTabsCounter++;
 
             userJComboBox.addKeyListener(new KeyListener() {
-                public void keyTyped(KeyEvent e) {}
-                public void keyPressed(KeyEvent e) {}
+                public void keyTyped(KeyEvent e) {
+                }
+
+                public void keyPressed(KeyEvent e) {
+                }
+
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    if(e.getKeyCode()==KeyEvent.VK_ENTER){
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                         rent.doClick();
                     }
                 }
             });
             productJComboBox.addKeyListener(new KeyListener() {
-                public void keyTyped(KeyEvent e) {}
-                public void keyPressed(KeyEvent e) {}
+                public void keyTyped(KeyEvent e) {
+                }
+
+                public void keyPressed(KeyEvent e) {
+                }
+
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    if(e.getKeyCode()==KeyEvent.VK_ENTER){
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                         rent.doClick();
                     }
                 }
             });
             daysTextField.addKeyListener(new KeyListener() {
-                public void keyTyped(KeyEvent e) {}
-                public void keyPressed(KeyEvent e) {}
+                public void keyTyped(KeyEvent e) {
+                }
+
+                public void keyPressed(KeyEvent e) {
+                }
+
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    if(e.getKeyCode()==KeyEvent.VK_ENTER){
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                         rent.doClick();
                     }
                 }
@@ -406,11 +380,11 @@ public class View extends JFrame{
 
             rent.addActionListener(b -> {
                 try {
-                    rental.rent((User)userJComboBox.getSelectedItem(), (Product)productJComboBox.getSelectedItem(), Integer.parseInt(daysTextField.getText()));
+                    rental.rent((User) userJComboBox.getSelectedItem(), (Product) productJComboBox.getSelectedItem(), Integer.parseInt(daysTextField.getText()));
                     pane.remove(activeTabsCounter - 1);
                     activeTabsCounter--;
                 } catch (IllegalArgumentException i) {
-                    //TODO: Wyświetlić komunikat o błędzie.
+                    JOptionPane.showMessageDialog(this, i.getMessage(), "Błąd!", JOptionPane.ERROR_MESSAGE);
                 }
             });
         });
@@ -462,6 +436,95 @@ public class View extends JFrame{
                 new ButtonTabComponent(pane, this));
     }
 
+    private void loggin(Rental rental) {
+        JButton button = new JButton("Zaloguj");
+        JPanel p = new JPanel(new SpringLayout());
+        JLabel loginJLabel = new JLabel("Login", JLabel.TRAILING);
+        JLabel passwordJLabel = new JLabel("Hasło", JLabel.TRAILING);
+        p.add(loginJLabel);
+        JTextField loginTextField = new JTextField(20);
+        JPasswordField passwordField = new JPasswordField(20);
+        loginJLabel.setLabelFor(loginTextField);
+        p.add(loginTextField);
+        p.add(passwordJLabel);
+        passwordJLabel.setLabelFor(passwordField);
+        p.add(passwordField);
+        loginTextField.addKeyListener(new KeyListener() {
+            public void keyTyped(KeyEvent e) {
+            }
 
+            public void keyPressed(KeyEvent e) {
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    button.doClick();
+                }
+            }
+        });
+        passwordField.addKeyListener(new KeyListener() {
+            public void keyTyped(KeyEvent e) {
+            }
+
+            public void keyPressed(KeyEvent e) {
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    button.doClick();
+                }
+            }
+        });
+        SpringUtilities.makeCompactGrid(p,
+                2, 2, //rows, cols
+                6, 6,        //initX, initY
+                6, 6);       //xPad, yPad
+
+        //Create and set up the window.
+        p.setOpaque(true);  //content panes must be opaque
+        JComponent panelLogging = new JPanel(false);
+        panelLogging.add(p);
+        panelLogging.add(button);
+        pane.add("Logowanie", panelLogging);
+        initTabComponent(activeTabsCounter);
+        activeTabsCounter++;
+        pane.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
+        setSize(new Dimension(400, 400));
+        setLocationRelativeTo(null);
+        setVisible(true);
+
+        button.addActionListener(e -> {
+            if (rental.checkCredentials(loginTextField.getText(), passwordField.getText())) {
+                CurrentSession.getInstance().setLoggedUser(rental.getUser(loginTextField.getText()));
+                pane.remove(activeTabsCounter - 1);
+                activeTabsCounter--;
+                JPanel panel = new JPanel();
+                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+                switch (CurrentSession.getInstance().getLoggedUserRole()) {
+                    case USER:
+                        menuButtons.forEach((B, R) -> {
+                            if (R == Role.USER) panel.add(B);
+                        });
+                        break;
+                    case SELLER:
+                        menuButtons.forEach((B, R) -> {
+                            if (R != Role.ADMIN) panel.add(B);
+                        });
+                        break;
+                    case ADMIN:
+                        menuButtons.forEach((B, R) -> panel.add(B));
+                }
+                pane.add("Główne menu", panel);
+                initTabComponent(activeTabsCounter);
+                activeTabsCounter++;
+            } else {
+                loginTextField.setText("");
+                passwordField.setText("");
+                JOptionPane.showMessageDialog(this, "Błędny login lub hasło!", "Błąd!", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    }
 }
 

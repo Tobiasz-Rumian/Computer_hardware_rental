@@ -15,19 +15,20 @@ import java.util.*;
  */
 public class Rental implements Serializable {
     private Map<String, User> users = new HashMap<>();
+
     {
-        users.put("admin",new User("admin",Role.ADMIN,"admin"));
+        users.put("admin", new User("admin", Role.ADMIN, "admin"));
     }
+
     private Map<String, Product> products = new HashMap<>();
     private List<Transaction> history = new ArrayList<>();
-    private CurrentSession session = CurrentSession.getInstance();
 
     public void addUser(String nick, Role role, String password) throws IllegalArgumentException {
-        if (session == null || session.getLoggedUserRole() != Role.ADMIN)
+        if (CurrentSession.getInstance().getLoggedUserRole() != Role.ADMIN)
             throw new IllegalArgumentException("Nie masz wystarczających praw by wykonać tę akcję!");
         if (users.containsKey(nick))
             throw new IllegalArgumentException("Użytkownik o podanym nick'u już istnieje!");
-        if((nick==null||nick.equals(""))||(password==null||password.equals("")))
+        if ((nick == null || nick.equals("")) || (password == null || password.equals("")))
             throw new IllegalArgumentException("Błędne dane!");
         users.put(nick, new User(nick, role, password));
     }
@@ -37,14 +38,14 @@ public class Rental implements Serializable {
     }
 
     public void addProduct(String name, BigDecimal price) throws IllegalArgumentException {
-        if (session == null || session.getLoggedUserRole() != Role.ADMIN)
+        if (CurrentSession.getInstance().getLoggedUserRole() != Role.ADMIN)
             throw new IllegalArgumentException("Nie masz wystarczających praw by wykonać tę akcję!");
         if (products.containsKey(name))
             throw new IllegalArgumentException("Produkt o podanej nazwie już istnieje!");
         products.put(name, new Product(name, price));
     }
 
-    public Map<String,Product> showProducts(){
+    public Map<String, Product> showProducts() {
         return products;
     }
 
@@ -54,7 +55,7 @@ public class Rental implements Serializable {
         addTransaction(newTransaction);
     }
 
-    public User getUser(String nick){
+    public User getUser(String nick) {
         return users.get(nick);
     }
 
@@ -75,7 +76,7 @@ public class Rental implements Serializable {
         return history;
     }
 
-    public boolean checkCredentials(String login, String password){
+    public boolean checkCredentials(String login, String password) {
         return users.containsKey(login) && users.get(login).getPassword().equals(password);
     }
 

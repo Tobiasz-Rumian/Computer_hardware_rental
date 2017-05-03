@@ -14,13 +14,13 @@ import java.io.ObjectOutputStream;
 public class Run {
     private Rental rental;
 
-    private Run(){
-        try{
+    private Run() {
+        try {
             loadRentalFromFile();
-        }catch (Exception e){
-            rental=new Rental();
+        } catch (Exception e) {
+            rental = new Rental();
         }
-        new View("Wypożyczalnia sprzętu komputerowego",rental,this);
+        new View("Wypożyczalnia sprzętu komputerowego", rental, this);
     }
 
     public Rental getRental() {
@@ -35,10 +35,12 @@ public class Run {
     }
 
     private void loadRentalFromFile() throws Exception {
+        CurrentSession.getInstance().clearCurrentSession();
         ObjectInputStream in = new ObjectInputStream(new FileInputStream("Rental.rental"));
         rental = (Rental) in.readObject();
         in.close();
     }
+
     public static void main(String[] args) {
         new Run();
     }
