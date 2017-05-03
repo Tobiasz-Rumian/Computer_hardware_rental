@@ -1,10 +1,12 @@
 
 # Zadanie Java
 
-###Uruchomienie
+### Uruchomienie
 Podczas pierwszego uruchomienia programu tworzone jest konto administratora o danych:
-Login: admin\
+```
+Login: admin
 Hasło: admin
+```
 
 ### Problem
 Prowadzimy wypożyczalnię _[tu wstaw rodzaj]_ (filmów/samochodów/sprzętu komputerowego). Jesteśmy zobowiązani dostarczyć oprogramowanie wspomagające pracę wypożyczalni.
